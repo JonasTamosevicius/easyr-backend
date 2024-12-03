@@ -1,25 +1,26 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/sequelize";
-import { User } from "@model/User";
-import { Organization } from "@model/Organization";
+import { OrganizationInviteAttributes } from "@shared/typescript/models/OrganziationInvite.attributes";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+} from "sequelize-typescript";
+import User from "./User";
+import Organization from "./Organization";
+@Table({
+  tableName: "users_access_controls",
+})
+export default class UserAccessControl extends Model<OrganizationInviteAttributes> {
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.BIGINT,
+  })
+  userId!: number;
 
-export const UserAccessControl = sequelize.define("users_access_controls", {
-  userId: {
-    type: DataTypes.BIGINT,
-    autoIncrement: true,
-    primaryKey: true,
-    references: {
-      key: "id",
-      model: User,
-    },
-  },
-  organizationId: {
-    type: DataTypes.BIGINT,
-    autoIncrement: true,
-    primaryKey: true,
-    references: {
-      key: "id",
-      model: Organization,
-    },
-  },
-});
+  @ForeignKey(() => Organization)
+  @Column({
+    type: DataType.BIGINT,
+  })
+  organizationId!: number;
+}

@@ -1,25 +1,11 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/sequelize";
-import { User } from "@model/User";
-import { UserAccessControl } from "@model/UserAccessControl";
-
-export const Organization = sequelize.define("organizations", {
-  id: {
-    type: DataTypes.STRING,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: new Date(),
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: new Date(),
-  },
-  name: {
-    type: DataTypes.STRING,
-  },
-});
-
-Organization.belongsToMany(User, { through: UserAccessControl });
+import { OrganizationAttributes } from "@shared/typescript/models/Organization.attributes";
+import { Table, Column, Model, DataType } from "sequelize-typescript";
+@Table({
+  tableName: "organizations",
+})
+export default class Organization extends Model<OrganizationAttributes> {
+  @Column({
+    type: DataType.STRING,
+  })
+  name!: string;
+}

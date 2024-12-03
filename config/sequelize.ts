@@ -1,22 +1,23 @@
-import { Sequelize } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
+import path from "path";
+import { fileURLToPath } from "url";
+import modelsSetup from "@model/index";
 
-export let sequelize: Sequelize = null;
+export const sequelize = new Sequelize({
+  database: "easyr",
+  dialect: "mariadb",
+  username: "root",
+  password: "easyrlocal",
+  port: 3307,
+});
 
-export const setupSequelize = async () => {
-  const sequelize = new Sequelize("easyr", "root", "easyrlocal", {
-    host: "localhost",
-    port: 3307,
-    dialect: "mariadb",
-  });
-
+(async () => {
+  modelsSetup();
   try {
     await sequelize.authenticate();
     console.log("Connection has been established successfully.");
+    console.log(sequelize.models);
   } catch (err) {
     console.error("Unable to connect to the database:", err);
   }
-
-  return sequelize;
-};
-
-sequelize ||= await setupSequelize();
+})();

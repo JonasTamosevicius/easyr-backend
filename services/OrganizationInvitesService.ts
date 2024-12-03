@@ -1,7 +1,7 @@
 import { CreateOrganizationDto } from "@shared/typescript/interfaces/createOrganizationDto.interface";
 import { getOrganizationInviteByUid } from "../repositories/OrganizationinvitesRepository";
 import { createOrganization } from "@service/OrganizationService";
-import { createUser } from "@service/UserService";
+import { createUserFromOrganizationInvite } from "@service/UserService";
 
 async function getOrganizationInvite(inviteId: string) {
   const invite = await getOrganizationInviteByUid(inviteId);
@@ -19,7 +19,9 @@ async function createOrganizationWithUserFromInvite(
     throw new Error("INVITATION DOES NOT EXIST");
   }
 
-  const organization = dto.organization;
+  const organization = await createOrganization(dto.organization);
+
+  // createUserFromOrganizationInvite(dto.user, organization)
 }
 
 export { getOrganizationInvite, createOrganizationWithUserFromInvite };

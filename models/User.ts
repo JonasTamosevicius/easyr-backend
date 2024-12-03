@@ -1,33 +1,32 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/sequelize";
-import { UserAccessControl } from "@model/UserAccessControl";
+import { OrganizationInviteAttributes } from "@shared/typescript/models/OrganziationInvite.attributes";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  BelongsToMany,
+} from "sequelize-typescript";
+import Organization from "./Organization";
+import UserAccessControl from "./UserAccessControl";
+@Table({
+  tableName: "users",
+})
+export default class User extends Model<OrganizationInviteAttributes> {
+  @Column({
+    type: DataType.STRING,
+  })
+  email!: string;
 
-export const User = sequelize.define("users", {
-  id: {
-    type: DataTypes.STRING,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  createdAt: {
-    type: DataTypes.DATE,
-    defaultValue: new Date(),
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    defaultValue: new Date(),
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      isEmail: true,
-    },
-  },
-  passwordHash: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  phoneNumber: {
-    type: DataTypes.STRING,
-  },
-});
+  @Column({
+    type: DataType.STRING,
+  })
+  passwordHash!: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  phoneNumber!: string;
+
+  @BelongsToMany(() => Organization, () => UserAccessControl)
+  organizations!: Organization[];
+}

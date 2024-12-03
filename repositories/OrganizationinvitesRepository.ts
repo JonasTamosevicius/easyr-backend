@@ -1,7 +1,7 @@
-import { OrganizationInvite } from "../models/OrganizationInvite";
+import OrganizationInvite from "../models/OrganizationInvite";
 
 async function getOrganizationInviteByUid(uid: string) {
-  return await OrganizationInvite.findByPk(uid);
+  return await OrganizationInvite.findOne();
 }
 
 export { getOrganizationInviteByUid };

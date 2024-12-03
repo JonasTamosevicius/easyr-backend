@@ -1,6 +1,7 @@
 // import sequelizeSetup from "./config/sequelize";
 import express from "express";
 import routeSetup from "./routes";
+import "config/sequelize";
 
 // let sequelize = await sequelizeSetup();
 
