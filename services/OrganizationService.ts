@@ -1,8 +1,11 @@
-import { Organization } from "@model/Organization";
+import Organization from "@model/Organization";
 import { CreateOrganizationDto } from "@shared/typescript/interfaces/createOrganizationDto.interface";
 
 async function createOrganization(dto: CreateOrganizationDto["organization"]) {
-  return null;
+  const organization = await Organization.create({
+    name: dto.name,
+  });
+  return organization;
 }
 
 export { createOrganization };

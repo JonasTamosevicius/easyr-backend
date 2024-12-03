@@ -25,7 +25,11 @@ organizationInvitesRouter.post("/:uid/redeem", async (req, res) => {
   const invitationUid = req.params.uid;
   const organizationDto = req.body as CreateOrganizationDto;
 
-  createOrganizationWithUserFromInvite(invitationUid, organizationDto);
+  return res
+    .status(200)
+    .json(
+      await createOrganizationWithUserFromInvite(invitationUid, organizationDto)
+    );
 });
 
 export default organizationInvitesRouter;

@@ -13,7 +13,7 @@ async function createOrganizationWithUserFromInvite(
   inviteId: string,
   dto: CreateOrganizationDto
 ) {
-  const invite = getOrganizationInvite(inviteId);
+  const invite = await getOrganizationInvite(inviteId);
 
   if (!invite) {
     throw new Error("INVITATION DOES NOT EXIST");
@@ -21,7 +21,19 @@ async function createOrganizationWithUserFromInvite(
 
   const organization = await createOrganization(dto.organization);
 
-  // createUserFromOrganizationInvite(dto.user, organization)
+  const user = await createUserFromOrganizationInvite(dto.user, organization);
+
+  await invite.destroy();
+
+  return {
+    ...organization.get(),
+    users: [
+      {
+        id: user.get().id,
+        email: user.get().email,
+      },
+    ],
+  };
 }
 
 export { getOrganizationInvite, createOrganizationWithUserFromInvite };

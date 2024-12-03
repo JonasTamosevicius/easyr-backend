@@ -1,4 +1,4 @@
-import { OrganizationInviteAttributes } from "@shared/typescript/models/OrganziationInvite.attributes";
+import { UserAttributes } from "@shared/typescript/models/User.attributes";
 import {
   Table,
   Column,
@@ -11,7 +11,7 @@ import UserAccessControl from "./UserAccessControl";
 @Table({
   tableName: "users",
 })
-export default class User extends Model<OrganizationInviteAttributes> {
+export default class User extends Model<UserAttributes> {
   @Column({
     type: DataType.STRING,
   })
