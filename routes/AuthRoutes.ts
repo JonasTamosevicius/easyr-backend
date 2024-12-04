@@ -17,4 +17,17 @@ authRoutes.post("/login", async (req, res) => {
   return sendResponse(res, await authService.login(req.body));
 });
 
+authRoutes.post("/logout", async (req, res) => {
+  authService.logout(req.body.userId);
+
+  return sendResponse(res, { status: 200, message: "Signed out" });
+});
+
+authRoutes.post("/refresh-token", async (req, res) => {
+  return sendResponse(
+    res,
+    await authService.refreshToken(req.body.refreshToken)
+  );
+});
+
 export default authRoutes;

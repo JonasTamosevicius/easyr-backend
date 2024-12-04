@@ -1,12 +1,9 @@
 import LoginDto from "@shared/typescript/dto/login.dto.interface";
 import UserService from "@service/UserService";
-import express from "express";
 import { ErrResponse } from "@utils/sendResponse";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import User from "@model/User";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { UserAttributes } from "@shared/typescript/models/User.attributes";
-import UserToken from "@model/UserToken";
 import UserTokenRepository from "@repo/UserTokenRepository";
 
 export default class AuthService {
@@ -65,5 +62,47 @@ export default class AuthService {
       process.env.REFRESH_TOKEN_SECRET as string,
       { expiresIn: "7d" }
     );
+  }
+
+  async logout(userId: number) {
+    const token = await this.userTokenRepository.findTokenByUserId(userId);
+
+    await token?.destroy();
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET as string
+      ) as { userId: number };
+
+      const rawToken = await this.userTokenRepository.findTokenByUserId(
+        decoded.userId
+      );
+
+      if (!rawToken) {
+        return new ErrResponse("EXPIRED_SESSION", "Session is expired");
+      }
+
+      const token = rawToken.get();
+
+      const isValidRefreshTokenForUser = await bcrypt.compare(
+        refreshToken,
+        token.refreshToken
+      );
+
+      if (!isValidRefreshTokenForUser) {
+        return new ErrResponse("INVALID_USER_TOKEN", "INVALID USER TOKEN");
+      }
+
+      return {
+        accessToken: this.generateUserToken(token.user),
+        refreshToken,
+      };
+    } catch (e) {
+      console.log(e);
+      return new ErrResponse("WRONG_TOKEN", "WRONG_TOKEN");
+    }
   }
 }
