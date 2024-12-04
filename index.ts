@@ -2,6 +2,8 @@
 import express from "express";
 import routeSetup from "./routes";
 import "config/sequelize";
+import dotenv from "dotenv";
+dotenv.config();
 
 // let sequelize = await sequelizeSetup();
 

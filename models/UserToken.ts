@@ -5,19 +5,26 @@ import {
   Model,
   DataType,
   BelongsTo,
-  BelongsToMany,
+  ForeignKey,
+  PrimaryKey,
 } from "sequelize-typescript";
 import User from "@model/User";
-import UserAccessControl from "@model/UserAccessControl";
 @Table({
-  tableName: "organizations",
+  tableName: "user_tokens",
 })
-export default class Organization extends Model<OrganizationAttributes> {
+export default class UserToken extends Model {
+  @PrimaryKey
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.BIGINT,
+  })
+  userId!: number;
+
   @Column({
     type: DataType.STRING,
   })
-  name!: string;
+  refreshToken!: string;
 
-  @BelongsToMany(() => User, () => UserAccessControl)
-  users!: User[];
+  @BelongsTo(() => User)
+  user!: User;
 }

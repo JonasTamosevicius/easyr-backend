@@ -5,9 +5,12 @@ import {
   Model,
   DataType,
   BelongsToMany,
+  HasOne,
+  Scopes,
 } from "sequelize-typescript";
 import Organization from "./Organization";
 import UserAccessControl from "./UserAccessControl";
+import UserToken from "@model/UserToken";
 @Table({
   tableName: "users",
 })
@@ -29,4 +32,7 @@ export default class User extends Model<UserAttributes> {
 
   @BelongsToMany(() => Organization, () => UserAccessControl)
   organizations!: Organization[];
+
+  @HasOne(() => UserToken)
+  token!: UserToken;
 }

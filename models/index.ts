@@ -2,6 +2,7 @@ import Organization from "./Organization";
 import OrganizationInvite from "./OrganizationInvite";
 import User from "./User";
 import UserAccessControl from "./UserAccessControl";
+import UserToken from "./UserToken";
 import { sequelize } from "../config/sequelize";
 
 export default function () {
@@ -10,5 +11,6 @@ export default function () {
     OrganizationInvite,
     User,
     UserAccessControl,
+    UserToken,
   ]);
 }

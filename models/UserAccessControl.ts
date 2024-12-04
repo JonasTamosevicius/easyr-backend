@@ -27,4 +27,14 @@ export default class UserAccessControl extends Model<UserAccessControlAttributes
     type: DataType.BIGINT,
   })
   organizationId!: number;
+
+  @Column({
+    type: DataType.JSON,
+  })
+  permissions!: string[];
+
+  @Column({
+    type: DataType.BOOLEAN,
+  })
+  loggedIn!: string[];
 }

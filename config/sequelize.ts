@@ -9,9 +9,6 @@ export const sequelize = new Sequelize({
   username: "root",
   password: "easyrlocal",
   port: 3307,
-  define: {
-    raw: false,
-  },
 });
 
 (async () => {

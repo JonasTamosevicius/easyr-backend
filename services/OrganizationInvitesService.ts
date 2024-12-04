@@ -1,39 +1,48 @@
 import { CreateOrganizationDto } from "@shared/typescript/interfaces/createOrganizationDto.interface";
 import { getOrganizationInviteByUid } from "../repositories/OrganizationinvitesRepository";
 import { createOrganization } from "@service/OrganizationService";
-import { createUserFromOrganizationInvite } from "@service/UserService";
+import UserService from "@service/UserService";
 
-async function getOrganizationInvite(inviteId: string) {
-  const invite = await getOrganizationInviteByUid(inviteId);
+export default class OrganizationInviteService {
+  private userService: UserService;
 
-  return invite;
-}
-
-async function createOrganizationWithUserFromInvite(
-  inviteId: string,
-  dto: CreateOrganizationDto
-) {
-  const invite = await getOrganizationInvite(inviteId);
-
-  if (!invite) {
-    throw new Error("INVITATION DOES NOT EXIST");
+  constructor() {
+    this.userService = new UserService();
   }
 
-  const organization = await createOrganization(dto.organization);
+  async getOrganizationInvite(inviteId: string) {
+    const invite = await getOrganizationInviteByUid(inviteId);
 
-  const user = await createUserFromOrganizationInvite(dto.user, organization);
+    return invite;
+  }
 
-  await invite.destroy();
+  async createOrganizationWithUserFromInvite(
+    inviteId: string,
+    dto: CreateOrganizationDto
+  ) {
+    const invite = await this.getOrganizationInvite(inviteId);
 
-  return {
-    ...organization.get(),
-    users: [
-      {
-        id: user.get().id,
-        email: user.get().email,
-      },
-    ],
-  };
+    if (!invite) {
+      throw new Error("INVITATION DOES NOT EXIST");
+    }
+
+    const organization = await createOrganization(dto.organization);
+
+    const user = await this.userService.createUserFromOrganizationInvite(
+      dto.user,
+      organization
+    );
+
+    await invite.destroy();
+
+    return {
+      ...organization.get(),
+      users: [
+        {
+          id: user.get().id,
+          email: user.get().email,
+        },
+      ],
+    };
+  }
 }
-
-export { getOrganizationInvite, createOrganizationWithUserFromInvite };

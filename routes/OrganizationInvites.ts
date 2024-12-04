@@ -1,10 +1,8 @@
-import express, { Request } from "express";
-import {
-  getOrganizationInvite,
-  createOrganizationWithUserFromInvite,
-} from "@service/OrganizationInvitesService";
+import express, { Request, Router } from "express";
+import OrganizationInviteService from "@service/OrganizationInvitesService";
 import { CreateOrganizationDto } from "@shared/typescript/interfaces/createOrganizationDto.interface";
 
+const organizationInviteService = new OrganizationInviteService();
 const organizationInvitesRouter = express.Router();
 
 organizationInvitesRouter.use((_, __, next) => {
@@ -18,7 +16,9 @@ organizationInvitesRouter.get("/", (_, res) => {
 organizationInvitesRouter.get("/:uid", async (req, res) => {
   const paramId = req.params.uid;
 
-  return res.status(200).json(await getOrganizationInvite(paramId));
+  return res
+    .status(200)
+    .json(await organizationInviteService.getOrganizationInvite(paramId));
 });
 
 organizationInvitesRouter.post("/:uid/redeem", async (req, res) => {
@@ -28,7 +28,10 @@ organizationInvitesRouter.post("/:uid/redeem", async (req, res) => {
   return res
     .status(200)
     .json(
-      await createOrganizationWithUserFromInvite(invitationUid, organizationDto)
+      await organizationInviteService.createOrganizationWithUserFromInvite(
+        invitationUid,
+        organizationDto
+      )
     );
 });
 
